@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John Doe - Data Engineer Portfolio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            opacity: 0.8;
+            animation: gradientBG 10s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .profile-section {
+            margin: 2rem 0;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            background-color: #ddd;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.1);
+        }
+
+        .skills-section, .experience-section {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .skills-section:hover, .experience-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .project-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .project-details {
+            display: none;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .skill-tag:hover {
+            transform: scale(1.1);
+            background-color: #2980b9;
+        }
+
+        .contact-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .social-links {
+            margin: 1rem 0;
+        }
+
+        .social-links a {
+            color: #2c3e50;
+            margin: 0 1rem;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .social-links a:hover {
+            transform: scale(1.2);
+            color: #3498db;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+            min-width: 200px;
+            margin: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            background-color: #2980b9;
+        }
+
+        .chart-container {
+            margin: 2rem 0;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #skillsChart {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tab-container {
+            margin: 2rem 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .tab-button {
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border: none;
+            background-color: #eee;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .loading-bar {
+            height: 4px;
+            width: 100%;
+            background-color: #f0f0f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background-color: #3498db;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-bar">
+        <div class="loading-progress"></div>
+    </div>
+
+    <header>
+        <div class="animated-bg"></div>
+        <div class="header-content container">
+            <h1>John Doe</h1>
+            <p>Senior Data Engineer</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="profile-section">
+            <img src="/api/placeholder/200/200" alt="Profile Picture" class="profile-img">
+            <h2>About Me</h2>
+            <p>Data Engineer with 5+ years of experience in building scalable data pipelines and ETL processes. Passionate about big data technologies and cloud computing.</p>
+        </section>
+
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="skills">Skills</button>
+                <button class="tab-button" data-tab="experience">Experience</button>
+                <button class="tab-button" data-tab="projects">Projects</button>
+            </div>
+
+            <div class="tab-content active" id="skills">
+                <section class="skills-section">
+                    <h2>Technical Skills</h2>
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                    <div>
+                        <span class="skill-tag" data-skill="Python">Python</span>
+                        <span class="skill-tag" data-skill="SQL">SQL</span>
+                        <span class="skill-tag" data-skill="Spark">Apache Spark</span>
+                        <span class="skill-tag" data-skill="AWS">AWS</span>
+                        <span class="skill-tag" data-skill="Airflow">Airflow</span>
+                        <span class="skill-tag" data-skill="Kafka">Kafka</span>
+                        <span class="skill-tag" data-skill="Docker">Docker</span>
+                        <span class="skill-tag" data-skill="Kubernetes">Kubernetes</span>
+                        <span class="skill-tag" data-skill="Snowflake">Snowflake</span>
+                        <span class="skill-tag" data-skill="dbt">dbt</span>
+                    </div>
+                </section>
+            </div>
+
+            <div class="tab-content" id="experience">
+                <section class="experience-section">
+                    <h2>Professional Experience</h2>
+                    <div class="project-card">
+                        <h3>Senior Data Engineer - Tech Corp (2020-Present)</h3>
+                        <p>Led the development of real-time data processing pipeline handling 1M+ events per second.</p>
+                        <button class="details-toggle">Show Details</button>
+                        <div class="project-details">
+                            <ul>
+                                <li>Designed and implemented data warehouse architecture using Snowflake</li>
+                                <li>Reduced data processing costs by 40% through optimization</li>
+                                <li>Built automated data quality monitoring system</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h3>Data Engineer - Data Solutions Inc (2018-2020)</h3>
+                        <p>Developed ETL pipelines for financial data processing.</p>
+                        <button class="details-toggle">Show Details</button>
+                        <div class="project-details">
+                            <ul>
+                                <li>Implemented data lake solution using AWS S3 and Apache Spark</li>
+                                <li>Created automated reporting system using Apache Airflow</li>
+                                <li>Mentored junior engineers in best practices</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="tab-content" id="projects">
+                <section class="experience-section">
+                    <h2>Featured Projects</h2>
+                    <div class="project-card">
+                        <h3>Real-time Analytics Platform</h3>
+                        <p>Built a scalable real-time analytics platform processing 10TB+ data daily.</p>
+                        <button class="details-toggle">Show Details</button>
+                        <div class="project-details">
+                            <p>Technologies: Apache Kafka, Apache Spark, AWS, Python</p>
+                            <ul>
+                                <li>Implemented real-time data processing using Kafka Streams</li>
+                                <li>Designed fault-tolerant architecture with automatic failover</li>
+                                <li>Achieved sub-second latency for real-time analytics</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h3>Data Quality Framework</h3>
+                        <p>Developed an automated data quality monitoring framework reducing manual QA time by 70%.</p>
+                        <button class="details-toggle">Show Details</button>
+                        <div class="project-details">
+                            <p>Technologies: Python, dbt, Airflow, Snowflake</p>
+                            <ul>
+                                <li>Built automated testing framework for data quality</li>
+                                <li>Implemented real-time alerting system</li>
+                                <li>Reduced data incidents by 60%</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <section class="contact-section">
+            <h2>Contact</h2>
+            <p>Email: john.doe@email.com</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Loading bar animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const progress = document.querySelector('.loading-progress');
+            progress.style.width = '100%';
+            setTimeout(() => {
+                document.querySelector('.loading-bar').style.display = 'none';
+            }, 1000);
+        });
+
+        // Tab switching
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.dataset.tab;
+                
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Project details toggle
+        document.querySelectorAll('.details-toggle').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const details = e.target.nextElementSibling;
+                const isHidden = details.style.display === 'none' || details.style.display === '';
+                
+                details.style.display = isHidden ? 'block' : 'none';
+                e.target.textContent = isHidden ? 'Hide Details' : 'Show Details';
+            });
+        });
+
+        // Skills chart
+        const ctx = document.getElementById('skillsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Python', 'SQL', 'Big Data', 'Cloud', 'DevOps', 'Data Modeling'],
+                datasets: [{
+                    label: 'Skill Level',
+                    data: [90, 85, 80, 75, 70, 85],
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    pointBackgroundColor: 'rgba(
